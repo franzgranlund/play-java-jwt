@@ -1,7 +1,8 @@
 # JWT Authentication In Play Framework 2.6 Java
 
 This project shows how to do JSON Web Token authentication in 
-[Play Framework 2.6](https://www.playframework.com) using Java.
+[Play Framework 2.6](https://www.playframework.com) using Java. It is meant as a starting point
+when implementing JWT authentication in your own REST application.
 
 JWT verification is done with the excellent library 
 [Java JWT provided by Auth0](https://github.com/auth0/java-jwt) but can easily be used with other 
