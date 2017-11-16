@@ -1,0 +1,17 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>time="%date", level=%level, class=%class, %message, %ex{0}%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="play" level="WARN"/>
+    <logger name="application" level="WARN"/>
+    <logger name="dev" level="WARN"/>
+    <logger name="akka" level="WARN"/>
+    <logger name="org.hibernate.validator.messageinterpolation.ParameterMessageInterpolator" level="ERROR" />
+
+    <root level="WARN">
+        <!-- appender-ref ref="STDOUT"/ -->
+    </root>
+</configuration>
