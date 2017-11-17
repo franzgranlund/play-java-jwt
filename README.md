@@ -61,7 +61,7 @@ public Result requiresJwtViaFilter() {
 }
 ````
 
-A filter intercepts all incoming requests. This means that enabling this filter will require 
+A filter intercepts all incoming requests, therefore enabling this filter will require 
 a JWT on every single request. In some cases this is not desired, for example when authenticating with 
 a username and password (to get the token). 
 `JwtFilter` supports route modifiers to disable JWT checking on incoming requests. If 
