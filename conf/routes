@@ -7,6 +7,9 @@
 GET     /                           controllers.HomeController.generateSignedToken
 
 + noJwtFilter
+POST     /login                     controllers.HomeController.login()
+
++ noJwtFilter
 GET     /requires-jwt               controllers.HomeController.requiresJwt
 
 GET     /requires-jwt-via-filter    controllers.HomeController.requiresJwtViaFilter

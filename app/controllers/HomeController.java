@@ -2,11 +2,14 @@ package controllers;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.typesafe.config.Config;
 import jwt.JwtControllerHelper;
 import jwt.VerifiedJwt;
 import jwt.filter.Attrs;
 import play.Logger;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -25,16 +28,37 @@ public class HomeController extends Controller {
     private Config config;
 
     public Result generateSignedToken() throws UnsupportedEncodingException {
+        return ok("signed token: " + getSignedToken(5l));
+    }
+
+    public Result login() throws UnsupportedEncodingException {
+        JsonNode body = request().body().asJson();
+
+        if (body == null) {
+            Logger.error("json body is null");
+            return forbidden();
+        }
+
+        if (body.hasNonNull("username") && body.hasNonNull("password") && body.get("username").asText().equals("abc")) {
+            ObjectNode result = Json.newObject();
+            result.put("access_token", getSignedToken(7l));
+            return ok(result);
+        } else {
+            Logger.error("json body not as expected: {}", body.toString());
+        }
+
+        return forbidden();
+    }
+
+    private String getSignedToken(Long userId) throws UnsupportedEncodingException {
         String secret = config.getString("play.http.secret.key");
 
         Algorithm algorithm = Algorithm.HMAC256(secret);
-        String token = JWT.create()
+        return JWT.create()
                 .withIssuer("ThePlayApp")
-                .withClaim("user_id", 5)
+                .withClaim("user_id", userId)
                 .withExpiresAt(Date.from(ZonedDateTime.now(ZoneId.systemDefault()).plusMinutes(10).toInstant()))
                 .sign(algorithm);
-
-        return ok("signed token: " + token);
     }
 
     public Result requiresJwt() {
@@ -45,7 +69,11 @@ public class HomeController extends Controller {
 
             VerifiedJwt verifiedJwt = res.right.get();
             Logger.debug("{}", verifiedJwt);
-            return ok("access granted");
+
+            ObjectNode result = Json.newObject();
+            result.put("access", "granted");
+            result.put("secret_data", "birds fly");
+            return ok(result);
         });
     }
 
