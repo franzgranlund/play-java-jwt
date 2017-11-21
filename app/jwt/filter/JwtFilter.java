@@ -56,11 +56,13 @@ public class JwtFilter extends Filter {
 
     @Override
     public CompletionStage<Result> apply(Function<Http.RequestHeader, CompletionStage<Result>> nextFilter, Http.RequestHeader requestHeader) {
-        HandlerDef handler = requestHeader.attrs().get(Router.Attrs.HANDLER_DEF);
-        List<String> modifiers = handler.getModifiers();
+        if (requestHeader.attrs().containsKey(Router.Attrs.HANDLER_DEF)) {
+            HandlerDef handler = requestHeader.attrs().get(Router.Attrs.HANDLER_DEF);
+            List<String> modifiers = handler.getModifiers();
 
-        if (modifiers.contains(ROUTE_MODIFIER_NO_JWT_FILTER_TAG)) {
-            return nextFilter.apply(requestHeader);
+            if (modifiers.contains(ROUTE_MODIFIER_NO_JWT_FILTER_TAG)) {
+                return nextFilter.apply(requestHeader);
+            }
         }
 
         Optional<String> authHeader =  requestHeader.getHeaders().get(HEADER_AUTHORIZATION);
